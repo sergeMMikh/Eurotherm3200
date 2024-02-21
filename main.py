@@ -2,6 +2,7 @@
 
 import minimalmodbus
 from eurotherm3200 import Eurotherm3200
+from cls_Server import SocketServer
 
 instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1)
 instrument.serial.baudrate = 9600
@@ -14,8 +15,55 @@ if __name__ == '__main__':
 
     instrument = Eurotherm3200('/dev/ttyUSB0', 1)
     instrument.serial.baudrate = 9600
+    instrument.close_port_after_each_call = True
 
-    print(f'PV = {instrument.get_pv() * 10}') 
-    print(f'SP = {instrument.get_sp() * 10}') 
-    print(f'SPrate = {instrument.get_sprate()}') 
+    server = SocketServer(port=9000)
+    # trg_v=0
+    recvData={}
+      
+    while True:
+       
+        # if trg_v!=0:
+        #     strData = device_m.makeMeas(recvData)
+        # else:
+        #     trg_v=1
+       
+        recvData=server.recvServerData()
+
+        print(recvData)
+        
+        if b'Exit' in recvData: break
+
+        if b'Status' in recvData: 
+            server.sendServerData('Ok')
+            print('Sended data -> Ok')
+            trg_v=0
+        
+        if b'Get' in recvData:
+            arry = recvData.split(b":")
+            if len(arry) >=1:
+                cell_num = arry[1].decode()
+                server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
+            else:
+                server.sendServerData('Error')
+
+        if b'Set' in recvData:
+            arry = recvData.split(b":")
+            if len(arry) >=2:
+                cell_num = arry[1].decode()
+                new_value = arry[2].decode()
+
+                instrument.set_cell_value(cell_num=cell_num, value=new_value)
+
+                server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
+            else:
+                server.sendServerData('Error')
+        
+
+    print('Exiting')
+
+        
+
+
+    # print(instrument.serial.close())
 

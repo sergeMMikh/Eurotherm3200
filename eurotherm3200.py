@@ -15,6 +15,22 @@ class Eurotherm3200( minimalmodbus.Instrument ):
     
     def __init__(self, portname, subordinateaddress):
         minimalmodbus.Instrument.__init__(self, portname, subordinateaddress)
+
+    ## Get cell value
+        
+    def get_cell_val(self, cell_num):
+        """Return the process value (PV) for loop1."""
+        return self.read_register(int(cell_num), 1) * 10
+    
+    ## Set cell value
+    def set_cell_value(self, cell_num, value):
+        """Set the setpoint (SP) change rate for loop1.
+        
+        Args:
+            value (float): Setpoint change rate (most often in degrees/minute)
+
+        """
+        self.write_register(int(cell_num), int(value)/10, 1)  
     
     ## Process value
     
@@ -40,5 +56,6 @@ class Eurotherm3200( minimalmodbus.Instrument ):
 
         """
         self.write_register(35, value, 1)  
-    
+
+
     
