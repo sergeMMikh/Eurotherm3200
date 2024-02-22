@@ -53,7 +53,7 @@ if __name__ == '__main__':
             else:
                 server.sendServerData('Error')
 
-        elif b'Red' in recvData:
+        elif b'Read' in recvData:
             server.sendServerData(str(instrument.read_furnace_data()))
 
         else:

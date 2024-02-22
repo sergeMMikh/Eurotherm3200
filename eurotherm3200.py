@@ -48,6 +48,11 @@ class Eurotherm3200( minimalmodbus.Instrument ):
         """Return the setpoint (SP) change rate for loop1."""
         return self.read_register(35, 1)   
     
+    ## Output walue
+    def get_wop(self):
+        """Return the setpoint (SP) change rate for loop1."""
+        return self.read_register(4, 1)  
+    
     def set_sprate(self, value):
         """Set the setpoint (SP) change rate for loop1.
         
@@ -57,8 +62,10 @@ class Eurotherm3200( minimalmodbus.Instrument ):
         """
         self.write_register(35, value, 1)  
 
+
+    ## Read furnace data for furnace monitoring 
     def read_furnace_data(self):
-        return f'PV={self.get_pv()};SP={self.get_sp()};SPrate={self.get_sprate()}'
+        return f'PV={self.get_pv()};SP={self.get_sp()};SPrate={self.get_sprate()};WOp={self.get_wop()}'
 
 
     
