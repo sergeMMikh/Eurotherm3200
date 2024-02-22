@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import time
 import minimalmodbus
 from eurotherm3200 import Eurotherm3200
 from cls_Server import SocketServer
@@ -15,26 +16,24 @@ if __name__ == '__main__':
 
     instrument = Eurotherm3200('/dev/ttyUSB0', 1)
     instrument.serial.baudrate = 9600
-    instrument.close_port_after_each_call = True
+    instrument.close_port_after_each_call = False # True- Makes connection safty
 
     server = SocketServer(port=9000)
     recvData={}
       
     while True:
        
-        recvData=str(server.recvServerData())
-
-        print(f'Received data: {recvData}')
+        recvData=str(server.recvServerData().decode())
 
         match recvData.split(':'):
 
             # Exrenal program stop 
-            case ["b'Exit'"]|["b'Quit'"]:
+            case ['Exit']|['Quit']:
                 server.sendServerData('Exit')
                 break
             
             # Check if program is alive
-            case ["b'Status'"]:
+            case ['Status']:
                 server.sendServerData('Ok')
 
             # Get cell data from furnace controller
@@ -43,15 +42,17 @@ if __name__ == '__main__':
 
             # Set a new value to controller memory cell
             case ['Set', cell_num, new_value]:
-                server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
+                server.sendServerData(str(instrument.set_cell_value(cell_num=cell_num, value=new_value)))
 
             # Get the data sequence for furnace conditions monitoring
-            case ["b'Read'"]:
+            case ['Read']:
                 server.sendServerData(str(instrument.read_furnace_data()))
 
             # Case of unknown message
             case _:
                 server.sendServerData('Unknown command')
+
+        time.sleep(0.1)
 
 
     print('Exiting')
