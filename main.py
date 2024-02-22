@@ -22,49 +22,37 @@ if __name__ == '__main__':
       
     while True:
        
-        recvData=server.recvServerData()
+        recvData=str(server.recvServerData())
 
         print(f'Received data: {recvData}')
 
-        # Exrenal program stop         
-        if b'Exit' | 'Quit' in recvData: break
+        match recvData.split(':'):
 
-        # Check if program is alive
-        elif b'Status' in recvData: 
-            server.sendServerData('Ok')
-            print('Sended data -> Ok')
-            trg_v=0
-        
-        # Get cell data from furnace controller 
-        elif b'Get' in recvData:
-            arry = recvData.split(b":")
-            if len(arry) >=1:
-                cell_num = arry[1].decode()
+            # Exrenal program stop 
+            case ["b'Exit'"]|["b'Quit'"]:
+                server.sendServerData('Exit')
+                break
+            
+            # Check if program is alive
+            case ["b'Status'"]:
+                server.sendServerData('Ok')
+
+            # Get cell data from furnace controller
+            case ['Get', cell_num]:
                 server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
-            else:
-                server.sendServerData('Error')
 
-        # Set a new value to controller cell
-        elif b'Set' in recvData:
-            arry = recvData.split(b":")
-            if len(arry) >=2:
-                cell_num = arry[1].decode()
-                new_value = arry[2].decode()
-
-                instrument.set_cell_value(cell_num=cell_num, value=new_value)
-
+            # Set a new value to controller memory cell
+            case ['Set', cell_num, new_value]:
                 server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
-            else:
-                server.sendServerData('Error')
 
-        # Get the data sequence for furnace conditions monitoring
-        elif b'Read' in recvData:
-            server.sendServerData(str(instrument.read_furnace_data()))
+            # Get the data sequence for furnace conditions monitoring
+            case ["b'Read'"]:
+                server.sendServerData(str(instrument.read_furnace_data()))
 
-        # Case of unknown message
-        else:
-            server.sendServerData('Error')
-        
+            # Case of unknown message
+            case _:
+                server.sendServerData('Unknown command')
+
 
     print('Exiting')
 
