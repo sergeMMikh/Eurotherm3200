@@ -18,28 +18,22 @@ if __name__ == '__main__':
     instrument.close_port_after_each_call = True
 
     server = SocketServer(port=9000)
-    # trg_v=0
     recvData={}
       
     while True:
        
-        # if trg_v!=0:
-        #     strData = device_m.makeMeas(recvData)
-        # else:
-        #     trg_v=1
-       
         recvData=server.recvServerData()
 
-        print(recvData)
+        print(f'Received data: {recvData}')
         
         if b'Exit' in recvData: break
 
-        if b'Status' in recvData: 
+        elif b'Status' in recvData: 
             server.sendServerData('Ok')
             print('Sended data -> Ok')
             trg_v=0
         
-        if b'Get' in recvData:
+        elif b'Get' in recvData:
             arry = recvData.split(b":")
             if len(arry) >=1:
                 cell_num = arry[1].decode()
@@ -47,7 +41,7 @@ if __name__ == '__main__':
             else:
                 server.sendServerData('Error')
 
-        if b'Set' in recvData:
+        elif b'Set' in recvData:
             arry = recvData.split(b":")
             if len(arry) >=2:
                 cell_num = arry[1].decode()
@@ -58,12 +52,13 @@ if __name__ == '__main__':
                 server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
             else:
                 server.sendServerData('Error')
+
+        elif b'Red' in recvData:
+            server.sendServerData(str(instrument.read_furnace_data()))
+
+        else:
+            server.sendServerData('Error')
         
 
     print('Exiting')
-
-        
-
-
-    # print(instrument.serial.close())
 

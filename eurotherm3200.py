@@ -57,5 +57,8 @@ class Eurotherm3200( minimalmodbus.Instrument ):
         """
         self.write_register(35, value, 1)  
 
+    def read_furnace_data(self):
+        return f'PV={self.get_pv()};SP={self.get_sp()};SPrate={self.get_sprate()}'
+
 
     
