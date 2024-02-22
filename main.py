@@ -25,14 +25,17 @@ if __name__ == '__main__':
         recvData=server.recvServerData()
 
         print(f'Received data: {recvData}')
-        
-        if b'Exit' in recvData: break
 
+        # Exrenal program stop         
+        if b'Exit' | 'Quit' in recvData: break
+
+        # Check if program is alive
         elif b'Status' in recvData: 
             server.sendServerData('Ok')
             print('Sended data -> Ok')
             trg_v=0
         
+        # Get cell data from furnace controller 
         elif b'Get' in recvData:
             arry = recvData.split(b":")
             if len(arry) >=1:
@@ -41,6 +44,7 @@ if __name__ == '__main__':
             else:
                 server.sendServerData('Error')
 
+        # Set a new value to controller cell
         elif b'Set' in recvData:
             arry = recvData.split(b":")
             if len(arry) >=2:
@@ -53,9 +57,11 @@ if __name__ == '__main__':
             else:
                 server.sendServerData('Error')
 
+        # Get the data sequence for furnace conditions monitoring
         elif b'Read' in recvData:
             server.sendServerData(str(instrument.read_furnace_data()))
 
+        # Case of unknown message
         else:
             server.sendServerData('Error')
         
