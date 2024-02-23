@@ -10,7 +10,13 @@ In this case, it is very important to obtain all the information in order to mak
 about saving samples and laboratory equipment.
 
 The furnace control unit consist of [Eurotherm 3216 controller](https://www.eurotherm.com/products/temperature-controllers/single-loop-temperature-controllers/3200-temperature-process-controller/) 
-and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/).
+and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) 
+connected by USB-RS232 adapter.
+
+## Installation
+
+1. Install [minimalmodbus](https://minimalmodbus.readthedocs.io/en/stable/installation.html)
+2. Clone current repository to your home folder (*/home/pi*)
 
 ## Controller part Description
 In *main.py* starts the server loop of accepting inlet connections. </br>
