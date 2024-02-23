@@ -12,7 +12,6 @@ reg_1 = instrument.read_register(1, 0)
 
 
 if __name__ == '__main__':
-    print('main')
 
     instrument = Eurotherm3200('/dev/ttyUSB0', 1)
     instrument.serial.baudrate = 9600
