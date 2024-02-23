@@ -16,7 +16,13 @@ connected by USB-RS232 adapter.
 ## Installation
 
 1. Install [minimalmodbus](https://minimalmodbus.readthedocs.io/en/stable/installation.html)
-2. Clone current repository to your home folder (*/home/pi*)
+2. Install [Zabbix Agent](https://www.zabbix.com/download_agents)
+3. Clone current repository to your home folder (*/home/pi*)
+4. To automatically run the termocontroller server you can copy file [start-eurotherm.service](systemctl/start-eurotherm.service)
+to ```/etc/systemd/system folder``` (*my Raspberry Pi work with Debian 1:6.1.73.*)
+5. start *start-eurotherm.service*:</br> ```sudo systemctl enable start-eurotherm.service && sudo systemctl start start-eurotherm.service``` 
+6. Check ```sudo systemctl status start-eurotherm.service```
+7. Copy files from folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d```.
 
 ## Controller part Description
 In *main.py* starts the server loop of accepting inlet connections. </br>
@@ -36,5 +42,3 @@ Class SocketServer rises server on port 9000.
 In *Zabbix* folder are: 
  - UserParameter config (*eurotherm_user_parameter.conf*) 
  - python script (*script_4_zabbix.py*)
-
-My Raspberry Pi work with Debian 1:6.1.73. 
