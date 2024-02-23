@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import os
-import re
 import socket
 
 def ask_server(sell_num: int) -> str:
