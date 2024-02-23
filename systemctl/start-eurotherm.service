@@ -1,0 +1,11 @@
+[Unit]
+After=default.target
+
+[Service]
+WorkingDirectory=/home/pi/
+User=pi
+ExecStart=/home/pi/projects/PY_projects/Eurotherm3200/main.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

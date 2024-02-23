@@ -10,27 +10,26 @@ instrument.serial.baudrate = 9600
 instrument.clear_buffers_before_each_transaction = True
 reg_1 = instrument.read_register(1, 0)
 
-
 if __name__ == '__main__':
 
     instrument = Eurotherm3200('/dev/ttyUSB0', 1)
     instrument.serial.baudrate = 9600
-    instrument.close_port_after_each_call = False # True- Makes connection safty
+    instrument.close_port_after_each_call = False  # True- Makes connection safty
 
     server = SocketServer(port=9000)
-    recvData={}
-      
+    recvData = {}
+
     while True:
-       
-        recvData=str(server.recvServerData().decode())
+
+        recvData = str(server.recvServerData().decode())
 
         match recvData.split(':'):
 
-            # Exrenal program stop 
-            case ['Exit']|['Quit']:
+            # External program stop
+            case ['Exit'] | ['Quit']:
                 server.sendServerData('Exit')
                 break
-            
+
             # Check if program is alive
             case ['Status']:
                 server.sendServerData('Ok')
@@ -53,6 +52,4 @@ if __name__ == '__main__':
 
         time.sleep(0.1)
 
-
     print('Exiting')
-
