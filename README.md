@@ -16,13 +16,17 @@ connected by USB-RS232 adapter.
 ## Installation
 
 1. Install [minimalmodbus](https://minimalmodbus.readthedocs.io/en/stable/installation.html)
-2. Install [Zabbix Agent](https://www.zabbix.com/download_agents)
-3. Clone current repository to your home folder (*/home/pi*)
-4. To automatically run the termocontroller server you can copy file [start-eurotherm.service](systemctl/start-eurotherm.service)
-to ```/etc/systemd/system folder``` (*my Raspberry Pi work with Debian 1:6.1.73.*)
-5. start *start-eurotherm.service*:</br> ```sudo systemctl enable start-eurotherm.service && sudo systemctl start start-eurotherm.service``` 
-6. Check ```sudo systemctl status start-eurotherm.service```
-7. Copy files from folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d```.
+2. Install Zabbix Agent: ```sudo apt install zabbix-agent2```
+3. Configure file */etc/zabbixzabbix_agent2.conf*
+4. Clone current repository to your home folder (*/home/pi*)
+5. To automatically run the termocontroller server you can copy file [start-eurotherm.service]
+(systemctl/start-eurotherm.service) to ```/etc/systemd/system folder``` 
+(*my Raspberry Pi work with Debian 1:6.1.73.*)
+6. start *start-eurotherm.service*:</br> ```sudo systemctl enable start-eurotherm.service && sudo systemctl start start-eurotherm.service``` 
+7. Check ```sudo systemctl status start-eurotherm.service```
+8. Copy files from folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d``` and give permissions for file *script_4_zabbix.py*.
+9. Restart service ```systemctl restart zabbix-agent2``` and check service status ```systemctl status zabbix-agent2```
+
 
 ## Controller part Description
 In *main.py* starts the server loop of accepting inlet connections. </br>
