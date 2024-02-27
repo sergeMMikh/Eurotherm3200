@@ -70,5 +70,5 @@ according to the set point rate)
 
 ## Images
 
- * My The furnace control unit :) ![My The furnace control unit :)](images/Setup.png)
- * Monitoring the sample annealing furnace cycle ![furnace cycle](images/Dash_2.png)
+ * My The furnace control unit :) </br> ![My The furnace control unit :)](images/Setup.png)
+ * Monitoring the sample annealing furnace cycle </br> ![furnace cycle](images/Dash_2.png)
