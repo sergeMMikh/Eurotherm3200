@@ -43,6 +43,6 @@ Class SocketServer rises server on port 9000.
 
 ## Zabbix part
 
-In *Zabbix* folder are: 
+*Zabbix* folder: 
  - UserParameter config (*eurotherm_user_parameter.conf*) 
  - python script (*script_4_zabbix.py*)
