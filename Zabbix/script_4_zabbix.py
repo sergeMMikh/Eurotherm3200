@@ -23,8 +23,11 @@ if __name__ == '__main__':
         case '-sp':
             print(float(ask_server(2)))
         case '-op':
-            print(float(ask_server(4)))
+            print(float(ask_server(4))/10)
+        case '-wsp':
+            print(float(ask_server(5)))
         case '-sprate':
-            print(float(ask_server(35)) / 10)
+            print(float(ask_server(35))/10)
         case _:
             print(f'unknown input: {sys.argv[1]}')
+
