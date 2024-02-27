@@ -31,7 +31,7 @@ connected via a USB-RS232 adapter. Raspberry Pi works with Debian 1:6.1.73.
 8. Copy files from the folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d``` and 
 grant permissions to the file named file *script_4_zabbix.py*.
 9. Restart  the service with the command: ```systemctl restart zabbix-agent2``` and 
-check the service status ```systemctl status zabbix-agent2```
+check its status: ```systemctl status zabbix-agent2```
 
 
 ## Controller part description
