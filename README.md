@@ -45,6 +45,20 @@ The *SocketServer* class raises a server on port 9000.
 
 ## Zabbix part
 
-*Zabbix* folder: 
- - UserParameter config (*eurotherm_user_parameter.conf*) 
- - python script (*script_4_zabbix.py*)
+The *Zabbix* folder contains files:: 
+ - **UserParameter** config (*eurotherm_user_parameter.conf*) 
+ - python script (*script_4_zabbix.py*) for **UserParameter**
+
+The eurotherm_user_parameter.conf allows to get data by Zabbix server requests:
+ - eurotherm_data_pv- current furnace temperature
+ - eurotherm_data_sp- step set point temperature
+ - eurotherm_data_wsp- actual working set point (calculated by the controller 
+according to the set point rate)
+ - eurotherm_data_op- furnace power output in percentage
+ - eurotherm_data_sprate- set point rate
+ - eurotherm_data[*], here you can use arguments like:
+   * -pv
+   * -sp
+   * -wsp
+   * -op
+   * -sprate
