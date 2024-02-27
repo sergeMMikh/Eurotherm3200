@@ -63,3 +63,8 @@ according to the set point rate)
    * -wsp
    * -op
    * -sprate
+
+## Images
+
+ * My The furnace control unit :) ![My The furnace control unit :)](images/Setup.png)
+ * Monitoring the sample annealing furnace cycle ![furnace cycle](images/Dash_2.png)
