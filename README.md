@@ -1,5 +1,3 @@
-![Static Badge](https://img.shields.io/badge/https%3A%2F%2Fwww.linkedin.com%2Fin%2Fserge-mikhalev-64a482232%2F?style=plastic&logo=LinkedIn&label=LinkedIn&labelColor=blue&cacheSeconds=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fserge-mikhalev-64a482232%2F)
-
 # Server for Eurotherm3200 thermo controller monitoring by Zabbix.
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/minimalmodbus)
