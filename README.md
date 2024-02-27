@@ -1,4 +1,9 @@
+![Static Badge](https://img.shields.io/badge/https%3A%2F%2Fwww.linkedin.com%2Fin%2Fserge-mikhalev-64a482232%2F?style=plastic&logo=LinkedIn&label=LinkedIn&labelColor=blue)
+
 # Server for Eurotherm3200 thermo controller monitoring by Zabbix.
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/minimalmodbus)
+
 
 *The project is based on [MinimalModbus](https://github.com/SarathM1/modbus.git) and adapted for 
 the Eurotherm 3200 series thermo controller.*
@@ -13,6 +18,7 @@ decisions regarding the preservation of samples and laboratory equipment.
 The furnace control unit consist of a [Eurotherm 3216 controller](https://www.eurotherm.com/products/temperature-controllers/single-loop-temperature-controllers/3200-temperature-process-controller/) 
 and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) 
 connected via a USB-RS232 adapter. Raspberry Pi works with Debian 1:6.1.73.
+
 
 ## Installation
 
