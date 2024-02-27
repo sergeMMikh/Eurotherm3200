@@ -28,8 +28,10 @@ connected via a USB-RS232 adapter. Raspberry Pi works with Debian 1:6.1.73.
 [start-eurotherm.service](systemctl/start-eurotherm.service) to ```/etc/systemd/system folder```
 6. start *start-eurotherm.service*:</br> ```sudo systemctl enable start-eurotherm.service && sudo systemctl start start-eurotherm.service``` 
 7. Check ```sudo systemctl status start-eurotherm.service```
-8. Copy files from folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d``` and give permissions for file *script_4_zabbix.py*.
-9. Restart service ```systemctl restart zabbix-agent2``` and check service status ```systemctl status zabbix-agent2```
+8. Copy files from the folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d``` and 
+grant permissions to the file named file *script_4_zabbix.py*.
+9. Restart  the service with the command: ```systemctl restart zabbix-agent2``` and 
+check the service status ```systemctl status zabbix-agent2```
 
 
 ## Controller part description
