@@ -2,16 +2,16 @@
 
 *The project base on [MinimalModbus](https://github.com/SarathM1/modbus.git) and adapted for Eurotherm 3200 series thermo controller.*
 
-One of the challenges of high temperature electrochemistry is the strict control of the furnace.
-In our laboratory we use different kinds of furnaces for different tasks: 
-from sample annealing to making electrochemistry measurements. 
-The biggest problem is an electricity power interrupt.
-In this case, it is very important to obtain all the information in order to make the right decision 
-about saving samples and laboratory equipment.
+One of the challenges in high-temperature electrochemistry is maintaining strict 
+control over the furnace. In our laboratory, we employ various types of furnaces 
+for different purposes, ranging from sample annealing to conducting electrochemical 
+measurements. The most significant issue we encounter is power interruptions. In such 
+instances, obtaining comprehensive information is crucial for making informed 
+decisions regarding the preservation of samples and laboratory equipment.
 
-The furnace control unit consist of [Eurotherm 3216 controller](https://www.eurotherm.com/products/temperature-controllers/single-loop-temperature-controllers/3200-temperature-process-controller/) 
+The furnace control unit consist of a [Eurotherm 3216 controller](https://www.eurotherm.com/products/temperature-controllers/single-loop-temperature-controllers/3200-temperature-process-controller/) 
 and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) 
-connected by USB-RS232 adapter.
+connected via a USB-RS232 adapter.
 
 ## Installation
 
@@ -29,17 +29,19 @@ connected by USB-RS232 adapter.
 
 
 ## Controller part Description
-In *main.py* starts the server loop of accepting inlet connections. </br>
-match-case construction filters inlet client commands by keywords:
+In *main.py*, the server loop begins, allowing it to accept incoming connections. </br>
+The match-case construction filters the commands from the inlet client based on keywords:
 
- - ```Exit``` or ```Quit``` for externally stop the program;
- - ```Status``` should simply respond *Ok* if program is still alive;
- - ```Get:<cell number>``` will scan a thermo controller memory *cell* and send a cell value as respond;
- - ```Set:<cell number>:<new value>``` will change value in a thermo controller memory *cell*
+ - ```Exit``` or ```Quit``` to externally stop the program;
+ - ```Status``` should simply respond with *Ok* if the program is still alive;
+ - ```Get:<cell number>``` will scan a thermo controller memory *cell* and send
+a cell value in response;
+ - ```Set:<cell number>:<new value>``` will change the value in a thermo controller 
+memory *cell*
  - ```Read``` make reading of parameters sequence and send back it's list separated by ```;```.
 
-All interactions with furnace controller are described in *eurotherm3200.py*</br>
-Class SocketServer rises server on port 9000. 
+All interactions with the furnace controller are described in *eurotherm3200.py*</br>
+The *SocketServer* class raises a server on port 9000. 
 
 ## Zabbix part
 
