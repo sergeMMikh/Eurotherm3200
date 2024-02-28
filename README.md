@@ -1,6 +1,6 @@
 # Server for Eurotherm3200 thermo controller monitoring by Zabbix.
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/minimalmodbus)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/unmixer)
 
 
 *The project is based on [MinimalModbus](https://github.com/SarathM1/modbus.git) and adapted for 
