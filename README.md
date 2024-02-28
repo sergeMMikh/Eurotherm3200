@@ -22,7 +22,7 @@ connected via a USB-RS232 adapter. Raspberry Pi works with Debian 1:6.1.73.
 
 1. Install [minimalmodbus](https://minimalmodbus.readthedocs.io/en/stable/installation.html)
 2. Install Zabbix Agent: ```sudo apt install zabbix-agent2```
-3. Configure file ```/etc/zabbix/zabbixzabbix_agent2.conf```
+3. Configure file ```/etc/zabbix/zabbix_agent2.conf```
 4. Clone current repository to your home folder (*/home/pi*)
 5. To automatically run the termocontroller server you can copy file 
 [start-eurotherm.service](systemctl/start-eurotherm.service) to ```/etc/systemd/system``` folder
