@@ -41,7 +41,7 @@ if __name__ == '__main__':
             server.sendServerData(str(instrument.get_cell_val(cell_num=spl[1])))
 
         # Set a new value to controller memory cell
-        elif 'Set' in spl[0] and len(spl[1]) > 0 and len(spl[2]) > 0:
+        elif 'Set' in spl[0] and spl[1] and spl[2]:
             server.sendServerData(str(instrument.set_cell_value(cell_num=spl[1], value=spl[2])))
 
         # Get the data sequence for furnace conditions monitoring

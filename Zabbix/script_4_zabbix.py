@@ -20,12 +20,12 @@ if __name__ == '__main__':
     if sys.argv[1] == '-pv':
         print(float(ask_server(1)))
     elif sys.argv[1] == '-sp':
-        print(float(ask_server(1)))
+        print(float(ask_server(2)))
     elif sys.argv[1] == '-op':
-        print(float(ask_server(1)))
+        print(float(ask_server(4))/10)
     elif sys.argv[1] == '-wsp':
-        print(float(ask_server(1)))
+        print(float(ask_server(5)))
     elif sys.argv[1] == '-sprate':
-        print(float(ask_server(1)))
+        print(float(ask_server(35))/10)
     else:
         print(f'unknown input: {sys.argv[1]}')
