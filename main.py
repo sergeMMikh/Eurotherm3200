@@ -11,12 +11,18 @@ instrument.clear_buffers_before_each_transaction = True
 reg_1 = instrument.read_register(1, 0)
 
 if __name__ == '__main__':
-
+    """ Connection via a USB-RS232 adapter """
     instrument = Eurotherm3200('/dev/ttyUSB0', 1)
+
+    """Set COM Port baud rate"""
     instrument.serial.baudrate = 9600
+
+    """Set Keep connection open after each request."""
     instrument.close_port_after_each_call = False  # True- Makes connection safty
 
+    """Open Port 9000 for client connection"""
     server = SocketServer(port=9000)
+
     recvData = {}
 
     while True:
