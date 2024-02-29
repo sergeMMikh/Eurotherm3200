@@ -17,17 +17,15 @@ def ask_server(sell_num: int) -> str:
 
 
 if __name__ == '__main__':
-    match sys.argv[1]:
-        case '-pv':
-            print(float(ask_server(1)))
-        case '-sp':
-            print(float(ask_server(2)))
-        case '-op':
-            print(float(ask_server(4))/10)
-        case '-wsp':
-            print(float(ask_server(5)))
-        case '-sprate':
-            print(float(ask_server(35))/10)
-        case _:
-            print(f'unknown input: {sys.argv[1]}')
-
+    if sys.argv[1] == '-pv':
+        print(float(ask_server(1)))
+    elif sys.argv[1] == '-sp':
+        print(float(ask_server(1)))
+    elif sys.argv[1] == '-op':
+        print(float(ask_server(1)))
+    elif sys.argv[1] == '-wsp':
+        print(float(ask_server(1)))
+    elif sys.argv[1] == '-sprate':
+        print(float(ask_server(1)))
+    else:
+        print(f'unknown input: {sys.argv[1]}')

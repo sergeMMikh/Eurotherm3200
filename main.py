@@ -23,32 +23,33 @@ if __name__ == '__main__':
 
         recvData = str(server.recvServerData().decode())
 
-        match recvData.split(':'):
+        spl = recvData.split(':')
 
-            # External program stop
-            case ['Exit'] | ['Quit']:
-                server.sendServerData('Exit')
-                break
+        print(f'spl: {spl}')
 
-            # Check if program is alive
-            case ['Status']:
-                server.sendServerData('Ok')
+        # External program stop
+        if 'Exit' in spl[0] or 'Quit' in spl[0]:
+            server.sendServerData('Exit')
+            break
 
-            # Get cell data from furnace controller
-            case ['Get', cell_num]:
-                server.sendServerData(str(instrument.get_cell_val(cell_num=cell_num)))
+        # Check if program is alive
+        elif 'Status' in spl[0]:
+            server.sendServerData('Ok')
 
-            # Set a new value to controller memory cell
-            case ['Set', cell_num, new_value]:
-                server.sendServerData(str(instrument.set_cell_value(cell_num=cell_num, value=new_value)))
+        # Get cell data from furnace controller
+        elif 'Get' in spl[0] and len(spl[1]) > 0:
+            server.sendServerData(str(instrument.get_cell_val(cell_num=spl[1])))
 
-            # Get the data sequence for furnace conditions monitoring
-            case ['Read']:
-                server.sendServerData(str(instrument.read_furnace_data()))
+        # Set a new value to controller memory cell
+        elif 'Set' in spl[0] and len(spl[1]) > 0 and len(spl[2]) > 0:
+            server.sendServerData(str(instrument.set_cell_value(cell_num=spl[1], value=spl[2])))
 
-            # Case of unknown message
-            case _:
-                server.sendServerData('Unknown command')
+        # Get the data sequence for furnace conditions monitoring
+        elif 'Read' in spl[0]:
+            server.sendServerData(str(instrument.read_furnace_data()))
+        # Case of unknown message
+        else:
+            server.sendServerData('Unknown command')
 
         time.sleep(0.1)
 

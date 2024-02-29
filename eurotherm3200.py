@@ -23,7 +23,7 @@ class Eurotherm3200(minimalmodbus.Instrument):
         return self.read_register(int(cell_num), 1) * 10
 
     # Set cell value
-    def set_cell_value(self, cell_num, value):
+    def set_cell_value(self, cell_num: str, value: str):
         """Set the setpoint (SP) change rate for loop1.
         
         Args:
