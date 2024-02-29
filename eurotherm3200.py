@@ -17,9 +17,9 @@ class Eurotherm3200(minimalmodbus.Instrument):
 
     # Get cell value
 
-    def get_cell_val(self, cell_num: str) -> str:
+    def get_cell_val(self, cell_num: str) -> str or None:
         """Retrieve the value stored in the memory cell.
-        :param cell_num: cell number
+        :param cell_num: the cell number
         :return: request from microcontroller
         """
         try:
@@ -30,10 +30,10 @@ class Eurotherm3200(minimalmodbus.Instrument):
             return f'Exception occurred: {error}'
 
     # Set cell value
-    def set_cell_value(self, cell_num: str, value: str):
+    def set_cell_value(self, cell_num: str, value: str) -> str or None:
         """Assign the new value to the memory cell
-        :param cell_num: cell number
-        :param value: new cell value
+        :param cell_num: the cell number
+        :param value: the new cell value
         :return: request from microcontroller
         """
         try:
@@ -45,7 +45,7 @@ class Eurotherm3200(minimalmodbus.Instrument):
             return f'Exception occurred: {error}'
 
     # Process value (current temperature)
-    def get_pv(self):
+    def get_pv(self) -> str or None:
         """Return the process value (PV)- current furnace temperature."""
         try:
             return self.read_register(1, 1)
@@ -54,7 +54,7 @@ class Eurotherm3200(minimalmodbus.Instrument):
         except Exception as error:
             return f'Exception occurred: {error}'
 
-    def get_sp(self):
+    def get_sp(self) -> str or None:
         """Return the current step setpoint (SP)."""
         try:
             return self.read_register(2, 1)
@@ -64,7 +64,7 @@ class Eurotherm3200(minimalmodbus.Instrument):
             return f'Exception occurred: {error}'
 
     # Setpoint rate
-    def get_sprate(self):
+    def get_sprate(self) -> str or None:
         """Return the setpoint rate."""
         try:
             return self.read_register(35, 1)
@@ -74,7 +74,7 @@ class Eurotherm3200(minimalmodbus.Instrument):
             return f'Exception occurred: {error}'
 
     # Output value
-    def get_wop(self):
+    def get_wop(self) -> str or None:
         """Return the  actual working set point
         (calculated by the controller according to the set point rate)."""
         try:
@@ -85,5 +85,5 @@ class Eurotherm3200(minimalmodbus.Instrument):
             return f'Exception occurred: {error}'
 
     # Read furnace data for furnace monitoring
-    def read_furnace_data(self):
+    def read_furnace_data(self) -> str or None:
         return f'PV={self.get_pv()};SP={self.get_sp()};SPrate={self.get_sprate()};WOp={self.get_wop()}'
