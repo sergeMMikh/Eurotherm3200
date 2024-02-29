@@ -8,7 +8,6 @@ from cls_Server import SocketServer
 instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1)
 instrument.serial.baudrate = 9600
 instrument.clear_buffers_before_each_transaction = True
-reg_1 = instrument.read_register(1, 0)
 
 if __name__ == '__main__':
     """ Connection via a USB-RS232 adapter """
