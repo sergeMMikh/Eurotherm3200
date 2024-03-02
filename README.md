@@ -18,8 +18,8 @@ instances, obtaining comprehensive information is crucial for making informed
 decisions regarding the preservation of samples and laboratory equipment.
 
 The furnace control unit consist of a [Eurotherm 3216 controller](https://www.eurotherm.com/products/temperature-controllers/single-loop-temperature-controllers/3200-temperature-process-controller/) 
-and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) 
-connected via a USB-RS232 adapter..
+and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) (also tested for Rock 4C+)
+connected via a USB-RS232 adapter.
 
 
 
