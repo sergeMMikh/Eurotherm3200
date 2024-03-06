@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
 import time
-import minimalmodbus
 from eurotherm3200 import Eurotherm3200
 from cls_Server import SocketServer
-
-instrument = minimalmodbus.Instrument('/dev/ttyUSB0', 1)
-instrument.serial.baudrate = 9600
-instrument.clear_buffers_before_each_transaction = True
 
 if __name__ == '__main__':
     """ Connection via a USB-RS232 adapter """
