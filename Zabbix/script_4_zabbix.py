@@ -18,7 +18,11 @@ def ask_server(sell_num: int) -> str:
 
 if __name__ == '__main__':
     if sys.argv[1] == '-pv':
-        print(float(ask_server(1)))
+        pv = float(ask_server(1))
+        if pv > 2000:
+            print(float(0.0))
+        else:
+            print(pv)
     elif sys.argv[1] == '-sp':
         print(float(ask_server(2)))
     elif sys.argv[1] == '-op':
