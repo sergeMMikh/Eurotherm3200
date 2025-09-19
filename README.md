@@ -38,6 +38,16 @@ grant permissions to the file named file *script_4_zabbix.py*.
 9. Restart  the service with the command: ```systemctl restart zabbix-agent2``` and 
 check its status: ```systemctl status zabbix-agent2```
 
+For easier and faster installation, two helper scripts are included in the repository:
+
+* `unlink_externally_managed.sh` — resolves issues with the `EXTERNALLY-MANAGED` marker in Python installations.  
+* `install.sh` — performs automated installation and configuration.
+
+**Note:**  
+The `install.sh` script accepts the Zabbix server address as an argument in order to add the corresponding entry into `zabbix_agent2.conf`.  
+If no argument is provided, the default server address.
+
+
 
 ## Controller part description
 In *main.py*, the server loop begins, allowing it to accept incoming connections. </br>
