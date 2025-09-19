@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # === settings ===
-ZBX_SERVER_IP="192.168.1.160"
+ZBX_SERVER_IP="${1:-"192.168.1.160"}"
 ZBX_CONF="/etc/zabbix/zabbix_agent2.conf"
 ZBX_D_DIR="/etc/zabbix/zabbix_agent2.d"
 SERVICE_NAME="start-eurotherm.service"
@@ -63,18 +63,20 @@ fi
 find "$ZBX_D_DIR" -type f -name "*.conf" -exec chmod 0644 {} \; -exec chown root:root {} \;
 
 echo "== 5) Установка и запуск systemd-сервиса start-eurotherm.service =="
-UNIT_SRC="${REPO_ROOT}/${SERVICE_NAME}"
-UNIT_DST="/etc/systemd/system/${SERVICE_NAME}"
+UNIT_DST="/etc/systemd/system/start-eurotherm.service"
+# Ищем файл в репозитории (включая подкаталоги)
+UNIT_SRC="$(find "$REPO_ROOT" -type f -name 'start-eurotherm.service' -print -quit)"
 
-if [[ -f "$UNIT_SRC" ]]; then
+if [[ -n "$UNIT_SRC" && -f "$UNIT_SRC" ]]; then
+  echo "Найден юнит: $UNIT_SRC"
   cp -a "$UNIT_SRC" "$UNIT_DST"
   chown root:root "$UNIT_DST"
   chmod 0644 "$UNIT_DST"
   systemctl daemon-reload
-  systemctl enable --now "$SERVICE_NAME"
-  systemctl status "$SERVICE_NAME" --no-pager || true
+  systemctl enable --now start-eurotherm.service
+  systemctl status start-eurotherm.service --no-pager || true
 else
-  echo "WARNING: Юнит ${SERVICE_NAME} не найден в репозитории (${UNIT_SRC}). Пропускаю установку сервиса."
+  echo "WARNING: start-eurotherm.service не найден в репозитории (${REPO_ROOT}). Пропускаю установку."
 fi
 
 echo "== 6) Перезапуск и проверка Zabbix Agent 2 =="
