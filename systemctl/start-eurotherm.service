@@ -1,11 +1,24 @@
 [Unit]
-After=default.target
+Description=Eurotherm controller
+Wants=network-online.target dev-ttyUSB0.device
+After=network-online.target dev-ttyUSB0.device
+BindsTo=dev-ttyUSB0.device
+StartLimitIntervalSec=0
 
 [Service]
-WorkingDirectory=/home/pi/
+Type=simple
+WorkingDirectory=/home/pi/Eurotherm3200
 User=pi
-ExecStart=/home/pi/Eurotherm3200/main.py
-Restart=on-failure
+ExecStart=/usr/bin/python3 /home/pi/Eurotherm3200/main.py
+Restart=always
+
+RestartSec=2
+TimeoutStopSec=5
+KillMode=process
+Environment=PYTHONUNBUFFERED=1
+
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
