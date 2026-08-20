@@ -1,90 +1,179 @@
-# Server for Eurotherm3200 thermo controller monitoring by Zabbix.
+# Eurotherm 3200 Monitoring Gateway
 
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/MinimalModbus)</br>
-[![Raspberry Pi Compatible](https://img.shields.io/badge/Raspberry%20Pi-Compatible-green.svg)](https://www.raspberrypi.org/)
-![Debian Versions](https://img.shields.io/badge/Debian-6--12-blue.svg)</br>
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/MinimalModbus)
+[![Raspberry Pi Compatible](https://img.shields.io/badge/Raspberry%20Pi-Compatible-green.svg)](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
 [![Rock 4C+ Compatible](https://img.shields.io/badge/Rock%204C%2B-Compatible-green.svg)](https://wiki.radxa.com/Rock4/4cplus)
-![Debian Version](https://img.shields.io/badge/Debian-11-blue.svg)
+![Debian](https://img.shields.io/badge/Debian-Linux-blue.svg)
 
+A lightweight monitoring gateway for **Eurotherm 3200-series temperature controllers** used with laboratory furnaces. The service runs on a Raspberry Pi 4 or Rock 4C+, communicates with the controller through a USB–RS232 adapter, exposes furnace parameters through a small TCP interface, and integrates them with **Zabbix** for remote monitoring.
 
-*The project is based on [MinimalModbus](https://github.com/SarathM1/modbus.git) and adapted for 
-the Eurotherm 3200 series thermo controller.*
+> **Production use:** this project is actively used in a laboratory environment. The repository therefore favors a small, stable implementation and straightforward deployment over unnecessary application complexity.
 
-One of the challenges in high-temperature electrochemistry is maintaining strict 
-control over the furnace. In our laboratory, we employ various types of furnaces 
-for different purposes, ranging from sample annealing to conducting electrochemical 
-measurements. The most significant issue we encounter is power interruptions. In such 
-instances, obtaining comprehensive information is crucial for making informed 
-decisions regarding the preservation of samples and laboratory equipment.
+## Why this project exists
 
-The furnace control unit consist of a [Eurotherm 3216 controller](https://www.eurotherm.com/products/temperature-controllers/single-loop-temperature-controllers/3200-temperature-process-controller/) 
-and [Raspberry Pi 4 single-board computer](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) (also tested for Rock 4C+)
-connected via a USB-RS232 adapter.
+High-temperature experiments can run for many hours and depend on controlled heating profiles. In our laboratory, furnaces are used for tasks ranging from sample annealing to electrochemical measurements. Power interruptions or unexpected furnace behavior can affect both samples and equipment.
 
+This gateway provides remote visibility into the furnace state so that temperature, set points, heating rate, and controller output can be monitored and recorded in Zabbix. Historical data is useful for diagnosing interrupted or abnormal furnace cycles and deciding how to handle affected experiments.
 
+## Architecture
+
+```text
+Eurotherm 3216 temperature controller
+              │
+           RS-232
+              │
+       USB–RS232 adapter
+              │
+   Raspberry Pi 4 / Rock 4C+
+              │
+     Python + MinimalModbus
+              │
+       TCP server :9000
+              │
+       Zabbix Agent 2
+              │
+        Zabbix Server
+              │
+      Monitoring dashboard
+```
+
+The Python service communicates with the Eurotherm controller and listens for local client requests on TCP port `9000`. Zabbix Agent 2 uses the supplied `UserParameter` configuration and helper script to query the service and expose furnace parameters to the Zabbix server.
+
+## Features
+
+- Communication with Eurotherm 3200-series controllers over serial/Modbus.
+- Reading individual controller memory cells.
+- Writing controller values when explicitly requested.
+- Reading a predefined set of furnace operating parameters.
+- Lightweight TCP interface for local integrations.
+- Zabbix Agent 2 integration through custom `UserParameter` keys.
+- Automatic startup through `systemd`.
+- Installation helper for Debian-based single-board computers.
+- Tested with Raspberry Pi 4 and Rock 4C+ hardware.
+
+## Technology stack
+
+| Component | Purpose |
+| --- | --- |
+| Python 3 | Gateway service and Zabbix helper |
+| MinimalModbus | Serial/Modbus communication with the controller |
+| RS-232 | Physical communication interface |
+| Zabbix Agent 2 | Collection of furnace metrics |
+| Zabbix Server | Monitoring, history, and visualization |
+| systemd | Service lifecycle management |
+| Debian Linux | Runtime platform |
+
+## Hardware
+
+The laboratory setup consists of:
+
+- a Eurotherm 3216 temperature controller;
+- Raspberry Pi 4 or Rock 4C+ single-board computer;
+- USB–RS232 adapter;
+- laboratory furnace controlled by the Eurotherm unit.
+
+The current service configuration expects the serial adapter at `/dev/ttyUSB0`, controller address `1`, and a baud rate of `9600`.
+
+## TCP command interface
+
+The service implemented in `main.py` listens on port `9000` and accepts a small command set:
+
+| Command | Description |
+| --- | --- |
+| `Status` | Health check; returns `Ok` while the service is responsive |
+| `Get:<cell>` | Read a controller memory cell |
+| `Set:<cell>:<value>` | Write a value to a controller memory cell |
+| `Read` | Read the predefined furnace monitoring parameter set |
+| `Exit` / `Quit` | Stop the server process |
+
+Controller-specific communication is implemented in `eurotherm3200.py`, while `cls_Server.py` provides the socket server used by the gateway.
+
+## Zabbix integration
+
+The [`Zabbix`](Zabbix) directory contains:
+
+- `eurotherm_user_parameter.conf` — Zabbix Agent 2 `UserParameter` definitions;
+- `script_4_zabbix.py` — helper used by Zabbix to query the local gateway.
+
+The configuration exposes the following furnace metrics:
+
+| Zabbix key | Parameter |
+| --- | --- |
+| `eurotherm_data_pv` | Current furnace/process temperature |
+| `eurotherm_data_sp` | Set-point temperature |
+| `eurotherm_data_wsp` | Working set point calculated by the controller |
+| `eurotherm_data_op` | Furnace power output, % |
+| `eurotherm_data_sprate` | Set-point ramp rate |
+| `eurotherm_data[*]` | Parameterized access using `-pv`, `-sp`, `-wsp`, `-op`, or `-sprate` |
 
 ## Installation
 
-1. Install [minimalmodbus](https://minimalmodbus.readthedocs.io/en/stable/installation.html)
-2. Install Zabbix Agent: ```sudo apt install zabbix-agent2```
-3. Configure file ```/etc/zabbix/zabbix_agent2.conf```
-4. Clone current repository to your home folder (*/home/pi*)
-5. To automatically run the termocontroller server you can copy file 
-[start-eurotherm.service](systemctl/start-eurotherm.service) to ```/etc/systemd/system``` folder
-6. start *start-eurotherm.service*:</br> ```sudo systemctl enable start-eurotherm.service && sudo systemctl start start-eurotherm.service``` 
-7. Check ```sudo systemctl status start-eurotherm.service```
-8. Copy files from the folder *Zabbix* to ```/etc/zabbix/zabbix_agent2.d``` and 
-grant permissions to the file named file *script_4_zabbix.py*.
-9. Restart  the service with the command: ```systemctl restart zabbix-agent2``` and 
-check its status: ```systemctl status zabbix-agent2```
+### Automated installation
 
-For easier and faster installation, two helper scripts are included in the repository:
+The repository contains `install.sh`, which installs the required packages, configures Zabbix Agent 2, installs the supplied Zabbix integration files, installs the systemd unit, and starts the services.
 
-* `unlink_externally_managed.sh` — resolves issues with the `EXTERNALLY-MANAGED` marker in Python installations.  
-* `install.sh` — performs automated installation and configuration.
+Run it from the cloned repository and provide the Zabbix server address:
 
-**Note:**  
-The `install.sh` script accepts the Zabbix server address as an argument in order to add the corresponding entry into `zabbix_agent2.conf`.  
-If no argument is provided, the default server address.
+```bash
+sudo bash install.sh <ZABBIX_SERVER_IP>
+```
 
+If no address is supplied, the script currently uses `192.168.1.160` as its default Zabbix server address.
 
+On Python installations protected by the PEP 668 `EXTERNALLY-MANAGED` mechanism, the installer handles the required `pip` option. The repository also contains `unlink_externally_managed.sh` as a legacy/helper option for environments where manual intervention is required.
 
-## Controller part description
-In *main.py*, the server loop begins, allowing it to accept incoming connections. </br>
-The match-case construction filters the commands from the inlet client based on keywords:
+### Manual installation
 
- - ```Exit``` or ```Quit``` to externally stop the program;
- - ```Status``` should simply respond with *Ok* if the program is still alive;
- - ```Get:<cell number>``` will scan a thermo controller memory *cell* and send
-a cell value in response;
- - ```Set:<cell number>:<new value>``` will change the value in a thermo controller 
-memory *cell*
- - ```Read``` make reading of parameters sequence and send back it's list separated by ```;```.
+1. Install Python 3, MinimalModbus, and Zabbix Agent 2.
+2. Clone this repository on the single-board computer.
+3. Configure `/etc/zabbix/zabbix_agent2.conf` with the Zabbix server address.
+4. Copy the files from `Zabbix/` to `/etc/zabbix/zabbix_agent2.d/` and make `script_4_zabbix.py` executable.
+5. Copy `systemctl/start-eurotherm.service` to `/etc/systemd/system/`.
+6. Reload systemd and start the gateway:
 
-All interactions with the furnace controller are described in *eurotherm3200.py*</br>
-The *SocketServer* class raises a server on port 9000. 
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now start-eurotherm.service
+sudo systemctl status start-eurotherm.service
+```
 
-## Zabbix part
+7. Restart Zabbix Agent 2:
 
-The *Zabbix* folder contains files:: 
- - **UserParameter** config (*eurotherm_user_parameter.conf*) 
- - python script (*script_4_zabbix.py*) for **UserParameter**
+```bash
+sudo systemctl restart zabbix-agent2
+sudo systemctl status zabbix-agent2
+```
 
-The eurotherm_user_parameter.conf allows to get data by Zabbix server requests:
- - eurotherm_data_pv- current furnace temperature
- - eurotherm_data_sp- step set point temperature
- - eurotherm_data_wsp- actual working set point (calculated by the controller 
-according to the set point rate)
- - eurotherm_data_op- furnace power output in percentage
- - eurotherm_data_sprate- set point rate
- - eurotherm_data[*], here you can use arguments like:
-   * -pv
-   * -sp
-   * -wsp
-   * -op
-   * -sprate
+## Project structure
 
-## Images
+```text
+.
+├── main.py                 # Main gateway loop and command dispatcher
+├── eurotherm3200.py        # Eurotherm controller communication
+├── cls_Server.py           # TCP socket server
+├── install.sh              # Automated installation/configuration
+├── requirements.txt        # Python dependency list
+├── systemctl/              # systemd service definition
+├── Zabbix/                 # Zabbix UserParameter configuration and helper
+└── images/                 # Laboratory setup and monitoring screenshots
+```
 
- * My The furnace control unit :) </br> ![My The furnace control unit :)](images/Setup.png)
- * Monitoring the sample annealing furnace cycle </br> ![furnace cycle](images/Dash_2.png)
+## Operational notes
+
+This software can issue write commands to a physical temperature controller. In a laboratory deployment, access to TCP port `9000` should therefore be restricted to trusted hosts/networks and the service configuration should be validated against the specific furnace/controller setup before use.
+
+The current implementation intentionally uses fixed serial settings matching the deployed laboratory installation. If the project is adapted to other equipment, verify the serial device, controller address, baud rate, register mapping, and safety limits before enabling write operations.
+
+## Laboratory deployment
+
+### Furnace control unit
+
+![Laboratory furnace control unit](images/Setup.png)
+
+### Monitoring an annealing cycle
+
+![Zabbix monitoring of a furnace annealing cycle](images/Dash_2.png)
+
+## Status
+
+The project is actively used for laboratory furnace monitoring. Changes to the runtime code and controller communication should be tested against the target hardware before deployment.
